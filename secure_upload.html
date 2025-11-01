@@ -1,0 +1,44 @@
+{% extends "secure_base.html" %}
+{% block title %}File Upload - SecureBank System{% endblock %}
+{% block content %}
+<div class="top-header">
+    <div>
+        <h1 class="page-title">Secure File Upload</h1>
+        <p class="page-subtitle">Upload documents with encryption</p>
+    </div>
+</div>
+
+<div style="max-width: 700px; margin: 0 auto;">
+    <div class="card">
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label class="form-label">Select File</label>
+                <input type="file" name="file" accept=".pdf,.png,.jpg,.jpeg" required class="form-input" style="padding: 1.5rem; border: 2px dashed var(--border-color);">
+                <small><i class="fas fa-info-circle"></i> Allowed: PDF, PNG, JPG, JPEG (Max 16MB)</small>
+            </div>
+            
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">
+                    <i class="fas fa-upload"></i> Upload Securely
+                </button>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary" style="flex: 1; text-align: center;">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+        </form>
+        
+        <div class="card" style="background: var(--main-bg); margin-top: 2rem; padding: 1.5rem;">
+            <h3 style="margin-bottom: 1rem; color: var(--accent-primary);">
+                <i class="fas fa-shield-alt"></i> Security Features:
+            </h3>
+            <ul style="margin-left: 1.5rem; color: var(--text-secondary); line-height: 1.8;">
+                <li>File type validation (whitelist only)</li>
+                <li>File size limit enforcement (16MB max)</li>
+                <li>Secure filename sanitization</li>
+                <li>Upload tracking & audit logging</li>
+                <li>Timestamp-based unique naming</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

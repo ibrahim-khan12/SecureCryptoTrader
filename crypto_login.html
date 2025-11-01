@@ -1,0 +1,42 @@
+{% extends "crypto_base.html" %}
+{% block title %}Login - CryptoTrader Pro{% endblock %}
+{% block content %}
+<div class="auth-container">
+    <div class="glass-card" style="max-width: 450px; width: 100%; text-align: center; padding: 2.5rem;">
+        <div style="margin-bottom: 2rem;">
+            <i class="fas fa-chart-line" style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;"></i>
+            <h1 style="font-size: 2rem; margin-bottom: 0.5rem; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                TRADER LOGIN
+            </h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">Access your crypto trading dashboard</p>
+        </div>
+        
+        <form method="POST">
+            <div class="form-group" style="text-align: left;">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-input" required placeholder="Enter your username" autocomplete="username">
+            </div>
+            
+            <div class="form-group" style="text-align: left;">
+                <label class="form-label">Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="loginPass" name="password" class="form-input" required placeholder="Enter your password" autocomplete="current-password">
+                    <button type="button" class="password-toggle" onclick="togglePassword('loginPass')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                <i class="fas fa-rocket"></i> ENTER PLATFORM
+            </button>
+        </form>
+        
+        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+            <p style="color: var(--text-muted);">
+                New trader? <a href="{{ url_for('register') }}" style="color: var(--accent); text-decoration: none; font-weight: 600;">Create Account</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

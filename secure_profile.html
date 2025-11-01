@@ -1,0 +1,97 @@
+{% extends "secure_base.html" %}
+{% block title %}Profile - SecureBank System{% endblock %}
+{% block content %}
+<div class="top-header">
+    <div>
+        <h1 class="page-title">My Profile</h1>
+        <p class="page-subtitle">Manage your account information</p>
+    </div>
+</div>
+
+<div style="max-width: 900px; margin: 0 auto;">
+    <div class="stats-grid" style="margin-bottom: 2rem;">
+        <div class="stat-card">
+            <div class="stat-label">Account Number</div>
+            <div class="stat-value" style="font-size: 1.5rem;">{{ account_number }}</div>
+        </div>
+        <div class="stat-card success">
+            <div class="stat-label">Current Balance</div>
+            <div class="stat-value">${{ "%.2f"|format(balance) }}</div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">
+                <i class="fas fa-user-edit"></i>
+                Update Profile
+            </h2>
+        </div>
+        
+        <form method="POST">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" name="full_name" value="{{ full_name or '' }}" maxlength="100" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email (Read-only)</label>
+                    <input type="email" value="{{ email or '' }}" readonly class="form-input" style="background: var(--main-bg);">
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div class="form-group">
+                    <label class="form-label">Phone Number</label>
+                    <input type="tel" name="phone" value="{{ phone or '' }}" placeholder="+1 (555) 123-4567" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">SSN (Encrypted)</label>
+                    <input type="text" name="ssn" placeholder="{{ ssn or 'Enter to update' }}" class="form-input">
+                    {% if ssn %}
+                    <small style="color: var(--accent-green);"><i class="fas fa-check"></i> Currently stored (encrypted)</small>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Address</label>
+                <textarea name="address" rows="2" maxlength="200" class="form-textarea">{{ address or '' }}</textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Update Profile
+            </button>
+        </form>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">
+                <i class="fas fa-shield-alt"></i>
+                Security Information
+            </h2>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+            <div class="stat-card">
+                <div class="stat-label">Password Security</div>
+                <span class="badge badge-success">
+                    <i class="fas fa-check"></i> Bcrypt Hashed
+                </span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Data Encryption</div>
+                <span class="badge badge-success">
+                    <i class="fas fa-lock"></i> AES-256
+                </span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Session Timeout</div>
+                <span class="badge badge-info">
+                    <i class="fas fa-clock"></i> 5 Minutes
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

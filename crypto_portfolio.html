@@ -1,0 +1,31 @@
+{% extends "crypto_base.html" %}
+{% block title %}Portfolio{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">MY PORTFOLIO</h1>
+</div>
+<div class="glass-card">
+    <h2 style="color: var(--accent); margin-bottom: 1rem;">HOLDINGS</h2>
+    {% if holdings %}
+    <table class="data-table">
+        <thead>
+            <tr><th>Asset</th><th>Amount</th><th>Value</th><th>P/L</th></tr>
+        </thead>
+        <tbody>
+            {% for h in holdings %}
+            <tr>
+                <td style="font-weight: 700;">{{ h.crypto_symbol }}</td>
+                <td>{{ "%.6f"|format(h.amount) }}</td>
+                <td>${{ "%.2f"|format(h.amount * prices[h.crypto_symbol]) }}</td>
+                <td style="color: {{ 'var(--success)' if prices[h.crypto_symbol] > h.purchase_price else 'var(--danger)' }};">
+                    {{ "%.1f"|format(((prices[h.crypto_symbol] - h.purchase_price) / h.purchase_price) * 100) }}%
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center; padding: 2rem; color: var(--text-muted);">No holdings.</p>
+    {% endif %}
+</div>
+{% endblock %}

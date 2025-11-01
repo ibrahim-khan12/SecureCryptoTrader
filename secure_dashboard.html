@@ -1,0 +1,133 @@
+{% extends "secure_base.html" %}
+{% block title %}Dashboard - SecureBank System{% endblock %}
+{% block content %}
+<div class="top-header">
+    <div>
+        <h1 class="page-title">Welcome back, {{ user[1] }}!</h1>
+        <p class="page-subtitle">Here's your financial overview</p>
+    </div>
+    <div class="header-actions">
+        <a href="{{ url_for('transaction') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i>
+            New Transaction
+        </a>
+    </div>
+</div>
+
+<div class="quick-actions">
+    <a href="{{ url_for('transaction') }}" class="quick-action-btn">
+        <div class="quick-action-icon">
+            <i class="fas fa-exchange-alt"></i>
+        </div>
+        <div class="quick-action-label">New Transaction</div>
+    </a>
+    <a href="{{ url_for('upload_file') }}" class="quick-action-btn">
+        <div class="quick-action-icon">
+            <i class="fas fa-cloud-upload-alt"></i>
+        </div>
+        <div class="quick-action-label">Upload Files</div>
+    </a>
+    <a href="{{ url_for('audit_logs') }}" class="quick-action-btn">
+        <div class="quick-action-icon">
+            <i class="fas fa-clipboard-list"></i>
+        </div>
+        <div class="quick-action-label">View Activity Logs</div>
+    </a>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card success">
+        <div class="stat-header">
+            <div>
+                <div class="stat-value">${{ "%.2f"|format(user[4]) }}</div>
+                <div class="stat-label">Account Balance</div>
+            </div>
+            <div class="stat-icon green">
+                <i class="fas fa-wallet"></i>
+            </div>
+        </div>
+        <div class="stat-change up">
+            <i class="fas fa-arrow-up"></i> 5.2% from last month
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-header">
+            <div>
+                <div class="stat-value">{{ transactions|length }}</div>
+                <div class="stat-label">Total Transactions</div>
+            </div>
+            <div class="stat-icon blue">
+                <i class="fas fa-exchange-alt"></i>
+            </div>
+        </div>
+    </div>
+    
+    <div class="stat-card warning">
+        <div class="stat-header">
+            <div>
+                <div class="stat-value">{{ user[3] }}</div>
+                <div class="stat-label">Account Number</div>
+            </div>
+            <div class="stat-icon yellow">
+                <i class="fas fa-credit-card"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class="fas fa-history"></i>
+            Recent Transactions
+        </h2>
+        <a href="{{ url_for('transaction') }}" class="btn btn-secondary">
+            <i class="fas fa-plus"></i> New
+        </a>
+    </div>
+    
+    {% if transactions %}
+    <div style="overflow-x: auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Recipient/Source</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Balance After</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in transactions %}
+                <tr>
+                    <td>
+                        <span class="badge badge-{{ 'success' if t[0] == 'deposit' else 'danger' if t[0] == 'withdrawal' else 'info' }}">
+                            <i class="fas fa-{{ 'arrow-down' if t[0] == 'deposit' else 'arrow-up' if t[0] == 'withdrawal' else 'exchange-alt' }}"></i>
+                            {{ t[0].title() }}
+                        </span>
+                    </td>
+                    <td style="font-weight: 700;">${{ "%.2f"|format(t[1]) }}</td>
+                    <td>{{ t[2] or 'N/A' }}</td>
+                    <td>{{ t[3] or 'N/A' }}</td>
+                    <td>{{ t[4][:16] }}</td>
+                    <td>${{ "%.2f"|format(t[5]) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 3rem;">
+        <i class="fas fa-receipt" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+        <h3 style="color: var(--text-secondary);">No transactions yet</h3>
+        <p style="color: var(--text-muted); margin: 1rem 0;">Start by making your first transaction</p>
+        <a href="{{ url_for('transaction') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> New Transaction
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

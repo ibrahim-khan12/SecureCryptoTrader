@@ -1,0 +1,26 @@
+{% extends "crypto_base.html" %}
+{% block title %}Markets{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">CRYPTO MARKETS</h1>
+</div>
+<div class="glass-card">
+    <table class="data-table">
+        <thead>
+            <tr><th>Asset</th><th>Price</th><th>24h</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+            {% for symbol, price in prices.items() %}
+            <tr>
+                <td style="font-weight: 700; color: var(--gold);">{{ symbol }}</td>
+                <td style="color: var(--success);">${{ "%.2f"|format(price) }}</td>
+                <td style="color: {{ 'var(--success)' if loop.index % 2 == 0 else 'var(--danger)' }};">
+                    {{ '+' if loop.index % 2 == 0 else '-' }}{{ (loop.index * 1.5)|round(1) }}%
+                </td>
+                <td><a href="{{ url_for('trade', symbol=symbol) }}" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">TRADE</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

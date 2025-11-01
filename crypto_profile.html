@@ -1,0 +1,25 @@
+{% extends "crypto_base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">TRADER PROFILE</h1>
+</div>
+<div class="glass-card">
+    <form method="POST">
+        <div class="form-group">
+            <label class="form-label">Phone</label>
+            <input type="tel" name="phone" value="{{ user.phone or '' }}" class="form-input">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Address</label>
+            <textarea name="address" class="form-textarea" rows="2">{{ user.address or '' }}</textarea>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Gov ID (Encrypted)</label>
+            <input type="password" name="government_id" class="form-input" placeholder="Update ID">
+            {% if masked_id %}<small style="color: var(--success);">Current: {{ masked_id }}</small>{% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">UPDATE PROFILE</button>
+    </form>
+</div>
+{% endblock %}

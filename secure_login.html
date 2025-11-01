@@ -1,0 +1,55 @@
+{% extends "secure_base.html" %}
+{% block title %}Login - SecureBank System{% endblock %}
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="auth-logo">
+                <i class="fas fa-shield-halved"></i>
+            </div>
+            <h1 class="auth-title">Welcome Back</h1>
+            <p class="auth-subtitle">Sign in to your secure banking account</p>
+        </div>
+        
+        <form method="POST">
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-input" required autocomplete="username" maxlength="50" placeholder="Enter your username">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="login-password" name="password" class="form-input" required autocomplete="current-password" placeholder="Enter your password">
+                    <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('login-password', this)">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In
+            </button>
+        </form>
+        
+        <div class="divider"></div>
+        
+        <p style="text-align: center; color: var(--text-secondary);">
+            Don't have an account? 
+            <a href="{{ url_for('register') }}" style="color: var(--accent-primary); font-weight: 600; text-decoration: none;">
+                Register Now
+            </a>
+        </p>
+        
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <span class="badge badge-success">
+                <i class="fas fa-lock"></i> 256-bit Encryption
+            </span>
+            <span class="badge badge-info">
+                <i class="fas fa-shield-check"></i> Secure Login
+            </span>
+        </div>
+    </div>
+</div>
+{% endblock %}

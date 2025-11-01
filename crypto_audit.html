@@ -1,0 +1,226 @@
+{% extends "crypto_base.html" %}
+{% block title %}Activity Logs - CryptoTrader Pro{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">ACTIVITY LOGS</h1>
+    <p class="page-subtitle">Track all your platform activities</p>
+</div>
+
+<!-- Activity Statistics -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="glass-card" style="text-align: center;">
+        <div style="font-size: 2rem; font-weight: 700; color: var(--accent);">{{ stats[0] }}</div>
+        <div style="color: var(--text-muted); font-size: 0.9rem;">Total Activities</div>
+    </div>
+    <div class="glass-card" style="text-align: center;">
+        <div style="font-size: 2rem; font-weight: 700; color: var(--success);">{{ stats[1] }}</div>
+        <div style="color: var(--text-muted); font-size: 0.9rem;">Active Days</div>
+    </div>
+    <div class="glass-card" style="text-align: center;">
+        <div style="font-size: 2rem; font-weight: 700; color: var(--gold);">{{ stats[3] }}</div>
+        <div style="color: var(--text-muted); font-size: 0.9rem;">Total Trades</div>
+    </div>
+    <div class="glass-card" style="text-align: center;">
+        <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">{{ stats[2] }}</div>
+        <div style="color: var(--text-muted); font-size: 0.9rem;">Logins</div>
+    </div>
+</div>
+
+<!-- Activity Timeline Chart -->
+<div class="glass-card" style="margin-bottom: 2rem;">
+    <h3 style="color: var(--accent); margin-bottom: 1rem;"><i class="fas fa-chart-line"></i> Last 7 Days Activity</h3>
+    <div style="display: flex; gap: 0.5rem; align-items: flex-end; height: 150px;">
+        {% for activity in daily_activity %}
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+            <div style="background: linear-gradient(to top, var(--primary), var(--accent)); 
+                        width: 100%; 
+                        height: {{ (activity[1] / stats[0] * 100)|int }}%; 
+                        border-radius: 4px 4px 0 0;
+                        transition: var(--transition);
+                        position: relative;"
+                 onmouseover="this.style.opacity='1'; this.querySelector('.tooltip').style.display='block';"
+                 onmouseout="this.style.opacity='0.8'; this.querySelector('.tooltip').style.display='none';"
+                 style="opacity: 0.8;">
+                <div class="tooltip" style="display: none; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); 
+                                           background: var(--card-bg); padding: 0.5rem; border-radius: 4px; white-space: nowrap;
+                                           border: 1px solid var(--border); margin-bottom: 5px;">
+                    {{ activity[1] }} activities
+                </div>
+            </div>
+            <small style="margin-top: 0.5rem; color: var(--text-muted);">{{ activity[0][-5:] }}</small>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Top Actions -->
+<div class="glass-card" style="margin-bottom: 2rem;">
+    <h3 style="color: var(--accent); margin-bottom: 1rem;"><i class="fas fa-trophy"></i> Most Common Actions</h3>
+    <div style="display: grid; gap: 0.75rem;">
+        {% for action in top_actions %}
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; 
+                    background: rgba(110, 86, 207, 0.1); border-radius: 8px; border-left: 3px solid var(--primary);">
+            <span style="font-weight: 600;">{{ action[0] }}</span>
+            <span style="color: var(--success); font-weight: 700;">{{ action[1] }} times</span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="glass-card" style="margin-bottom: 2rem;">
+    <h3 style="color: var(--accent); margin-bottom: 1rem;"><i class="fas fa-filter"></i> Filter Activities</h3>
+    <form method="GET" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-size: 0.85rem;">Action Type</label>
+            <select name="filter" class="form-select" onchange="this.form.submit()">
+                <option value="all" {% if filter_action == 'all' %}selected{% endif %}>All Activities</option>
+                <option value="LOGIN" {% if filter_action == 'LOGIN' %}selected{% endif %}>Logins</option>
+                <option value="TRADE" {% if filter_action == 'TRADE' %}selected{% endif %}>Trades</option>
+                <option value="PROFILE" {% if filter_action == 'PROFILE' %}selected{% endif %}>Profile Updates</option>
+                <option value="DASHBOARD" {% if filter_action == 'DASHBOARD' %}selected{% endif %}>Dashboard Views</option>
+                <option value="MARKETS" {% if filter_action == 'MARKETS' %}selected{% endif %}>Market Views</option>
+                <option value="FILE" {% if filter_action == 'FILE' %}selected{% endif %}>File Uploads</option>
+            </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-size: 0.85rem;">From Date</label>
+            <input type="date" name="date_from" value="{{ date_from }}" class="form-input" onchange="this.form.submit()">
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-size: 0.85rem;">To Date</label>
+            <input type="date" name="date_to" value="{{ date_to }}" class="form-input" onchange="this.form.submit()">
+        </div>
+        <div style="display: flex; align-items: flex-end;">
+            <a href="{{ url_for('audit_logs') }}" class="btn btn-secondary" style="width: 100%;">
+                <i class="fas fa-redo"></i> Reset
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Activity Log Table -->
+<div class="glass-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 style="color: var(--accent);"><i class="fas fa-history"></i> Activity History</h3>
+        <span class="badge" style="background: rgba(0, 217, 255, 0.2); color: var(--accent); padding: 0.5rem 1rem; border-radius: 20px;">
+            {{ logs|length }} records
+        </span>
+    </div>
+    
+    {% if logs %}
+    <div style="overflow-x: auto;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 20%;"><i class="fas fa-tag"></i> Action</th>
+                    <th style="width: 35%;"><i class="fas fa-info-circle"></i> Details</th>
+                    <th style="width: 20%;"><i class="fas fa-network-wired"></i> IP Address</th>
+                    <th style="width: 25%;"><i class="fas fa-clock"></i> Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr style="transition: var(--transition);">
+                    <td>
+                        <span class="activity-badge {{ 
+                            'badge-success' if 'SUCCESS' in log[0] else 
+                            'badge-danger' if 'FAILED' in log[0] else 
+                            'badge-warning' if 'TRADE' in log[0] else 
+                            'badge-info' }}" 
+                              style="display: inline-block; padding: 0.4rem 0.8rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600;">
+                            {% if 'LOGIN' in log[0] %}
+                                <i class="fas fa-sign-in-alt"></i>
+                            {% elif 'LOGOUT' in log[0] %}
+                                <i class="fas fa-sign-out-alt"></i>
+                            {% elif 'TRADE' in log[0] %}
+                                <i class="fas fa-exchange-alt"></i>
+                            {% elif 'DASHBOARD' in log[0] %}
+                                <i class="fas fa-home"></i>
+                            {% elif 'PROFILE' in log[0] %}
+                                <i class="fas fa-user-edit"></i>
+                            {% elif 'FILE' in log[0] %}
+                                <i class="fas fa-upload"></i>
+                            {% elif 'SESSION' in log[0] %}
+                                <i class="fas fa-clock"></i>
+                            {% else %}
+                                <i class="fas fa-circle"></i>
+                            {% endif %}
+                            {{ log[0] }}
+                        </span>
+                    </td>
+                    <td style="color: var(--text);">{{ log[1] }}</td>
+                    <td>
+                        <code style="background: rgba(110, 86, 207, 0.2); padding: 0.3rem 0.6rem; border-radius: 4px; 
+                                     font-family: 'JetBrains Mono', monospace; color: var(--accent); font-size: 0.85rem;">
+                            {{ log[2] }}
+                        </code>
+                    </td>
+                    <td style="color: var(--text-muted); font-size: 0.9rem;">
+                        <i class="fas fa-calendar-alt" style="margin-right: 0.5rem;"></i>
+                        {{ log[3][:19] }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Export Options -->
+    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; gap: 1rem; justify-content: flex-end;">
+        <button class="btn btn-secondary" onclick="exportToCSV()">
+            <i class="fas fa-file-csv"></i> Export CSV
+        </button>
+        <button class="btn btn-secondary" onclick="window.print()">
+            <i class="fas fa-print"></i> Print
+        </button>
+    </div>
+    
+    {% else %}
+    <div style="text-align: center; padding: 3rem;">
+        <i class="fas fa-inbox" style="font-size: 4rem; color: var(--text-muted); opacity: 0.5; margin-bottom: 1rem;"></i>
+        <h3 style="color: var(--text-secondary); margin-bottom: 0.5rem;">No activities found</h3>
+        <p style="color: var(--text-muted);">Start using the platform to see your activity logs here</p>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .badge-success { background: rgba(0, 255, 136, 0.2); color: var(--success); }
+    .badge-danger { background: rgba(255, 77, 109, 0.2); color: var(--danger); }
+    .badge-warning { background: rgba(255, 215, 0, 0.2); color: var(--gold); }
+    .badge-info { background: rgba(0, 217, 255, 0.2); color: var(--accent); }
+    
+    @media print {
+        .navbar, .sidebar, .btn, .glass-card:has(form) { display: none !important; }
+        body { background: white; color: black; }
+        .glass-card { border: 1px solid #ccc; background: white; }
+    }
+</style>
+
+<script>
+    function exportToCSV() {
+        const table = document.querySelector('.data-table');
+        let csv = [];
+        const rows = table.querySelectorAll('tr');
+        
+        for (let i = 0; i < rows.length; i++) {
+            const row = [], cols = rows[i].querySelectorAll('td, th');
+            for (let j = 0; j < cols.length; j++) {
+                let text = cols[j].innerText.replace(/"/g, '""');
+                row.push('"' + text + '"');
+            }
+            csv.push(row.join(','));
+        }
+        
+        const csvFile = new Blob([csv.join('\n')], { type: 'text/csv' });
+        const downloadLink = document.createElement('a');
+        downloadLink.download = 'activity_logs_' + new Date().toISOString().split('T')[0] + '.csv';
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+        downloadLink.style.display = 'none';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
+</script>
+{% endblock %}

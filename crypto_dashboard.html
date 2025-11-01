@@ -1,0 +1,49 @@
+{% extends "crypto_base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">TRADING DASHBOARD</h1>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="glass-card" style="text-align: center;">
+        <div style="font-size: 2rem; font-weight: 700; color: var(--gold);">${{ "%.2f"|format(portfolio_value) }}</div>
+        <div style="color: var(--text-muted);">Total Portfolio</div>
+    </div>
+    <div class="glass-card" style="text-align: center;">
+        <div style="font-size: 2rem; font-weight: 700; color: var(--success);">${{ "%.2f"|format(user.balance_usd) }}</div>
+        <div style="color: var(--text-muted);">USD Balance</div>
+    </div>
+    <div class="glass-card" style="text-align: center;">
+        <div style="font-size: 2rem; font-weight: 700; color: var(--accent);">{{ holdings|length }}</div>
+        <div style="color: var(--text-muted);">Assets Held</div>
+    </div>
+</div>
+
+<div class="glass-card">
+    <h2 style="color: var(--accent); margin-bottom: 1rem;">YOUR HOLDINGS</h2>
+    {% if holdings %}
+    <table class="data-table">
+        <thead>
+            <tr><th>Asset</th><th>Amount</th><th>Price</th><th>Value</th><th>P/L</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+            {% for h in holdings %}
+            <tr>
+                <td style="font-weight: 700;">{{ h.crypto_symbol }}</td>
+                <td>{{ "%.6f"|format(h.amount) }}</td>
+                <td style="color: var(--success);">${{ "%.2f"|format(prices[h.crypto_symbol]) }}</td>
+                <td>${{ "%.2f"|format(h.amount * prices[h.crypto_symbol]) }}</td>
+                <td style="color: {{ 'var(--success)' if prices[h.crypto_symbol] > h.purchase_price else 'var(--danger)' }};">
+                    {{ "%.1f"|format(((prices[h.crypto_symbol] - h.purchase_price) / h.purchase_price) * 100) }}%
+                </td>
+                <td><a href="{{ url_for('trade', symbol=h.crypto_symbol) }}" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">TRADE</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center; padding: 2rem; color: var(--text-muted);">No holdings yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

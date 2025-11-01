@@ -1,0 +1,16 @@
+{% extends "crypto_base.html" %}
+{% block title %}Upload{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">FILE UPLOAD</h1>
+</div>
+<div class="glass-card">
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label class="form-label">Document</label>
+            <input type="file" name="file" class="form-input" accept=".pdf,.jpg,.jpeg,.png" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">UPLOAD</button>
+    </form>
+</div>
+{% endblock %}

@@ -42,13 +42,25 @@ CryptoTrader Pro is a modern, secure, and feature-rich cryptocurrency trading si
 - **Password Visibility Toggle:** Easily show/hide passwords in forms.
 - **Interactive Components:** Animated charts, badges, and transitions.
 
+## 🖥️ Technologies Used
+
+- **Python 3.8+** — Main programming language
+- **Flask** — Web framework for backend and routing
+- **SQLite** — Lightweight relational database
+- **Werkzeug** — Secure password hashing and utilities
+- **Cryptography (Fernet)** — Data encryption for sensitive fields
+- **Jinja2** — Templating engine for HTML pages
+- **HTML5 & CSS3** — Responsive, modern UI
+- **JavaScript** — UI interactivity (password toggle, charts, export)
+- **Font Awesome** — Icon library for UI elements
+
 ---
 
 ## 🏁 Getting Started
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/CryptoTraderPro.git
+git clone https://github.com/ibrahim-khan12/CryptoTraderPro.git
 cd CryptoTraderPro
 ```
 
